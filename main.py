@@ -12,7 +12,19 @@ def main():
     Haar_cascade.show_bounded_faces(face[0], face[1])
     cv2.waitKey(1)
 
-    picture_upload.upload_to_n8n(face[0])
+    # 上傳圖片到 n8n webhook
+    try:
+        status_code = picture_upload.upload_to_n8n(face[0], timeout=10)
+
+        if status_code == 200:
+            print("圖片上傳成功")
+        else:
+            print("圖片上傳失敗，狀態碼：", status_code)
+            return
+    except Exception as e:
+        print("上傳圖片發生錯誤：", e)
+        return
+
 
     receive_from_n8n.run_server()
 

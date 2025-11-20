@@ -12,7 +12,8 @@ data_queue = queue.Queue()
 @app.route('/webhook', methods=['POST'])
 def webhook():
     data = request.json  # 接收 JSON 資料
-    print("收到的資料:", data)
+    # print("收到的資料:", data)
+    print("Webhook received data")
 
     # 把資料放到 queue 裡
     data_queue.put(data)

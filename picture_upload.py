@@ -3,7 +3,7 @@ import requests
 import tempfile
 import os
 
-def upload_to_n8n(frame):
+def upload_to_n8n(frame, timeout=10):
     # 1. save frame to a temporary JPEG file
     tmp = tempfile.NamedTemporaryFile(suffix=".jpg", delete=False)
     filename = tmp.name
@@ -16,11 +16,13 @@ def upload_to_n8n(frame):
     with open(filename, 'rb') as f:
         files = {'image': (os.path.basename(filename), f, 'image/jpeg')}
         try:
-            resp = requests.post(webhook_url, files=files)
+            resp = requests.post(webhook_url, files=files, timeout=timeout)
             print("Response status code:", resp.status_code)
             print("Response content:", resp.text)
+            return resp.status_code
         except Exception as e:
             print("Failed to send:", e)
+            raise
 
     # 3. delete the temporary file
     os.remove(filename)
